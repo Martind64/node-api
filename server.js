@@ -57,7 +57,7 @@ apiRouter.get('/', function(req, res) {
 });
 
 // on routes that end in /users
-// ----------------------------------------------------
+// -------------------------------------------------------------
 apiRouter.route('/users')
 
 	// create a user (accessed at POST http://localhost:8080/users)
@@ -80,7 +80,7 @@ apiRouter.route('/users')
 				// return a message
 				res.json({ message: 'User created!' });
 			});
-			})
+	})
 	.get(function(req, res) 
 	{
 		User.find(function(err, users) {
@@ -89,6 +89,44 @@ apiRouter.route('/users')
 		// return the users
 		res.json(users);
 			});
+	})
+
+// on routes that end in /users/user_id
+//---------------------------------------------------------
+
+apiRouter.route('/users/:user_id')
+	.get(function(req, res)
+	{
+		User.findById(req.params.user_id, function(err, user) 
+		{
+			if (err) res.send(err); 
+
+			// return that user
+			res.json(user);
+		});
+	})
+	// Update the user on the id
+	.put(function(req, res)
+	{
+		User.findById(req.params.user_id, function(err, user)
+		{
+			if(err) res.send(err);
+
+			//update the users info only if it's new
+			if (req.body.name) user.name = req.body.name;
+			if (req.body.username) user.username = req.body.username;
+			if (req.body.password) user.password = req.body.password;
+
+			// save the user
+			user.save(function(err)
+			{
+				if(err) res.send(err);
+
+				// return a message
+				res.json({ message: 'user updated'});
+
+			});
+		});
 	})
 
 
