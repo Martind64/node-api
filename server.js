@@ -89,7 +89,7 @@ apiRouter.route('/users')
 		// return the users
 		res.json(users);
 			});
-	})
+	});
 
 // on routes that end in /users/user_id
 //---------------------------------------------------------
@@ -128,6 +128,21 @@ apiRouter.route('/users/:user_id')
 			});
 		});
 	})
+	// delete user on id
+	.delete(function(req, res)
+	{
+	 	User.remove(
+	 	{
+	 		_id: req.params.user_id
+	 	},
+	 	function(err, user)
+	 	{
+	 		if(err) return res.send(err);
+	 		res.json({message: 'User has been deleted'});
+	 	}); 
+	});
+
+
 
 
 
