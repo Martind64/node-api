@@ -1,41 +1,43 @@
 // BASE SETUP
-//=========================
+// ======================================
 
-// Call the packages..................
-var express = require('express'); // Call express
-var app = express(); // define our app using express
-var bodyParser = require('body-parser'); // get body-parser
-var morgan = require('morgan'); // used to see requests
-var mongoose = require('mongoose'); // for working w/ our databse
-var port = process.env.PORT || 8080; // set the port for our app
+// Call the models
+var User       = require('./models/user');
 
-//connect to our database
-mongoose.connect('mongodb://localhost:27017/node-api')
+// CALL THE PACKAGES --------------------
+var express    = require('express');		// call express
+var app        = express(); 				// define our app using express
+var bodyParser = require('body-parser'); 	// get body-parser
+var morgan     = require('morgan'); 		// used to see requests
+var mongoose   = require('mongoose');
+var port       = process.env.PORT || 8080; // set the port for our app
 
-// APP CONFIGURATION ---------------
+// APP CONFIGURATION ---------------------
 // use body parser so we can grab information from POST requests
-app.use(bodyParser.urlencoded({ extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // configure our app to handle CORS requests
 app.use(function(req, res, next) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, content-type, \ Authorization');
+	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
 	next();
 });
 
-// log all requests to the console
+// log all requests to the console 
 app.use(morgan('dev'));
 
+// connect to our database 
+mongoose.connect('mongodb://localhost/node-api'); 
+
+// ROUTES FOR OUR API
+// ======================================
 
 // basic route for the home page
 app.get('/', function(req, res) {
 	res.send('Welcome to the home page!');
 });
-
-// ROUTES FOR OUR API
-//=============================================
 
 // get an instance of the express router
 var apiRouter = express.Router();
@@ -43,52 +45,59 @@ var apiRouter = express.Router();
 // middleware to use for all requests
 apiRouter.use(function(req, res, next) {
 	// do logging
-	console.log('Somebody just came to our api!');
-	// we'll add more to the middleware in chapter 10
-	// this is where we will authenticate users
+	console.log('Somebody just came to our app!');
 
 	next(); // make sure we go to the next routes and don't stop here
-})
-
-apiRouter.route('/users')
-
-		// create a user(accessed at POST http://localhost:8080/api/users)
-		.post(function(req, res) {
-
-				// create a new instance of the User model
-				var user = new User();
-
-				// set the users information (comes from the request)
-				user.name = req.body.username;
-				user.password = req.body.password;
-
-				// save the user and check for errors
-				user.save(function(err) {
-					if(err) {
-						//duplicate entry
-						if(err.code == 11000)
-						return res.json({ success: false, message: 'A user with that\ username already exists. '});
-
-						else
-							return res.send(err);
-					}
-					
-					res.json({ message: 'User created!'});
-				});
-		})
-
-// test route to make sure everything is working
-// accessed at GET hhtp://localhost:8080/api
-apiRouter.get('/', function(req, res) {
-	res.json({ message: 'hooray! welcome to our api'});
 });
 
-// more routes for our API will happen here
+// test route to make sure everything is working 
+// accessed at GET http://localhost:8080/api
+apiRouter.get('/', function(req, res) {
+	res.json({ message: 'Welcome to our api!' });	
+});
 
-// REGISTER OUR ROUTES -------------------------
+// on routes that end in /users
+// ----------------------------------------------------
+apiRouter.route('/users')
+
+	// create a user (accessed at POST http://localhost:8080/users)
+	.post(function(req, res) 
+	{
+		var user = new User();		// create a new instance of the User model
+		user.name = req.body.name;  // set the users name (comes from the request)
+		user.username = req.body.username;  // set the users username (comes from the request)
+		user.password = req.body.password;  // set the users password (comes from the request)
+
+		user.save(function(err) {
+			if (err) {
+				// duplicate entry
+				if (err.code == 11000) 
+					return res.json({ success: false, message: 'A user with that username already exists. '});
+				else 
+					return res.send(err);
+				}
+
+				// return a message
+				res.json({ message: 'User created!' });
+			});
+			})
+	.get(function(req, res) 
+	{
+		User.find(function(err, users) {
+		if (err) res.send(err);
+
+		// return the users
+		res.json(users);
+			});
+	})
+
+
+
+
+// REGISTER OUR ROUTES -------------------------------
 app.use('/api', apiRouter);
 
 // START THE SERVER
-//===========================
+// =============================================================================
 app.listen(port);
-console.log('Server started on port' + port);
+console.log('Server is open on port:' + port);
