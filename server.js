@@ -1,9 +1,6 @@
 // BASE SETUP
 // ======================================
 
-// Call the models
-var User       = require('./models/user');
-
 // CALL THE PACKAGES --------------------
 var express    = require('express');		// call express
 var app        = express(); 				// define our app using express
@@ -11,11 +8,7 @@ var bodyParser = require('body-parser'); 	// get body-parser
 var morgan     = require('morgan'); 		// used to see requests
 var mongoose   = require('mongoose');
 var config 	   = require('./config');
-
-// API ROUTES -------------------------------------
-var apiRoutes = require('./app/routes/api')(app, express);
-app.use('/api', apiRoutes);
-
+var path 	   = require('path');
 
 
 //json secret
@@ -40,12 +33,18 @@ app.use(morgan('dev'));
 // connect to our database 
 mongoose.connect(config.database); 
 
+// ROUTES FOR OUT API ==========================================
+// API ROUTES -------------------------------------
+var apiRoutes = require('./app/routes/api')(app, express);
+app.use('/api', apiRoutes);
 
-// basic route for the home page
-app.get('/', function(req, res) {
-	res.send('Welcome to the home page!');
+// MAIN CATCHALL ROUTE ------------------
+// SEND USERS TO FRONTEND -----------------
+// has to be registered after API ROUTES
+app.get('*', function(req, res)
+{
+	res.sendFile(path.join(__dirname + '/public/app/views/index.html'));
 });
-
 
 
 // START THE SERVER

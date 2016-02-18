@@ -1,4 +1,4 @@
-var User       = require('../../models/user');
+var User       = require('../models/user');
 var jwt        = require('jsonwebtoken');
 var config 	   = require('../../config');
 
@@ -54,7 +54,7 @@ apiRouter.post('/authenticate', function(req, res)
 					expiresInMinutes: 1440 // expires in 24 hours
 				});
 
-				// return the information including token as JSON
+				// return the information including token as JSONj
 				res.json(
 				{
 					success: true,
