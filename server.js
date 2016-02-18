@@ -11,7 +11,7 @@ var bodyParser = require('body-parser'); 	// get body-parser
 var morgan     = require('morgan'); 		// used to see requests
 var mongoose   = require('mongoose');
 var jwt        = require('jsonwebtoken');
-var port       = process.env.PORT || 8080; // set the port for our app
+var port       = process.env.PORT || 8000; // set the port for our app
 
 
 
@@ -241,10 +241,6 @@ apiRouter.route('/users/:user_id')
 	{
 		res.send(req.decoded);
 	});
-
-
-
-
 
 
 // REGISTER OUR ROUTES -------------------------------
