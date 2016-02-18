@@ -54,7 +54,7 @@ apiRouter.post('/authenticate', function(req, res)
 					expiresInMinutes: 1440 // expires in 24 hours
 				});
 
-				// return the information including token as JSONj
+				// return the information including token as JSON
 				res.json(
 				{
 					success: true,
