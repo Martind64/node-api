@@ -38,6 +38,10 @@ mongoose.connect(config.database);
 var apiRoutes = require('./app/routes/api')(app, express);
 app.use('/api', apiRoutes);
 
+// set static file location
+app.use(express.static(__dirname + '/public'));
+
+
 // MAIN CATCHALL ROUTE ------------------
 // SEND USERS TO FRONTEND -----------------
 // has to be registered after API ROUTES
