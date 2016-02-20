@@ -80,7 +80,7 @@ angular.module('authService', [])
 
 .factory('AuthInterceptor', function($q, $location, AuthToken)
 {
-	var InterceptorFactory = {};
+	var interceptorFactory = {};
 
 	// attach the token to every request
 	interceptorFactory.request = function(config)
@@ -107,5 +107,5 @@ angular.module('authService', [])
 
 	// redirect if a token doesn't authenticate
 
-	return aInterceptorFactory;
+	return interceptorFactory;
 });

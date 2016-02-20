@@ -34,14 +34,15 @@
 
 <!-- NAVBAR -->
 <header><!-- Header Begin -->
-	<div class="navbar navbar-inverse" ng-if="!main.Loggedin">
+	<div class="navbar navbar-inverse" ng-if="main.loggedIn">
 		<div class="container">
 			<div class="navbar-header">
 				<a href="/" class="navbar-brand"><span class="glyphicon glyphicon-fire text-danger"></span> User CRM</a>
 			</div>
 			<ul class="nav navbar-nav">
-				<li class="glyphicon glyphicon-user">Users</li>
+				<li><a href="/users"><span class="glyphicon glyphicon-user"></span>Users</a></li>
 			</ul>
+
 			<ul class="nav navbar-nav navbar-right">
 				<li ng-if="!main.loggedIn"><a href="/login">Login</a></li>
 				<li ng-if="main.loggedIn" class="navbar-text">Hello {{ main.user.name }}!</li>
@@ -51,6 +52,9 @@
 		</div>
 	</div>
 </header> <!-- Header End -->
+
+
+
 <main class="container">
 	<!-- ANGULAR VIEWS -->
 	<div ng-view></div>
